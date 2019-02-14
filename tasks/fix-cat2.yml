@@ -1382,27 +1382,27 @@
 
 - name: "MEDIUM | RHEL-07-030360 | PATCH | The Red Hat Enterprise Linux operating system must audit all executions of privileged functions."
   block:
-        - name: "Delete obsolete suid/sgid rules"
-          file: 
-             path: "/etc/audit/rules.d/rhel7stig_suid_sgid_commands.rules"
-             state: absent
-        
-        - name: "Audit rules for execve calls"
-          lineinfile:
-             path: "/etc/audit/rules.d/rhel7stig_execve_calls.rules"
-             create: yes
-             owner: root
-             group: root
-             mode: 0600
-             line: "{{ item }}"
-             state: present
-          with_items:
-             - "-a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -k setuid"
-             - "-a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -k setuid"
-             - "-a always,exit -F arch=b32 -S execve -C gid!=egid -F egid=0 -k setgid"
-             - "-a always,exit -F arch=b64 -S execve -C gid!=egid -F egid=0 -k setgid"
-          notify: restart auditd
-          
+      - name: "Delete obsolete suid/sgid rules"
+        file:
+            path: "/etc/audit/rules.d/rhel7stig_suid_sgid_commands.rules"
+            state: absent
+
+      - name: "Audit rules for execve calls"
+        lineinfile:
+            path: "/etc/audit/rules.d/rhel7stig_execve_calls.rules"
+            create: yes
+            owner: root
+            group: root
+            mode: 0600
+            line: "{{ item }}"
+            state: present
+        with_items:
+            - "-a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -k setuid"
+            - "-a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -k setuid"
+            - "-a always,exit -F arch=b32 -S execve -C gid!=egid -F egid=0 -k setgid"
+            - "-a always,exit -F arch=b64 -S execve -C gid!=egid -F egid=0 -k setgid"
+        notify: restart auditd
+
   when: rhel_07_030360
   tags:
       - RHEL-07-030360
